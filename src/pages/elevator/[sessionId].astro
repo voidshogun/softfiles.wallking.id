@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { sessionId } = Astro.params;
+---
+
+<BaseLayout title="Photobox Elevator Sessions | Wallking">
+    <div id="app-root" data-session-id={sessionId}></div>
+</BaseLayout>
+
+<script>
+    import { createApp } from "vue";
+    import SessionGallery from "../../components/SessionGallery.vue";
+
+    const root = document.getElementById("app-root");
+    if (root) {
+        const sessionId = root.dataset.sessionId;
+        const app = createApp(SessionGallery, { sessionId });
+        app.mount(root);
+    }
+</script>

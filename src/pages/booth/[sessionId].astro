@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { sessionId } = Astro.params;
+---
+
+<BaseLayout title="Your Moments at Wallking Booth">
+    <div id="booth-app-root" data-session-id={sessionId}></div>
+</BaseLayout>
+
+<script>
+    import { createApp } from "vue";
+    import BoothGallery from "../../components/BoothGallery.vue";
+
+    const root = document.getElementById("booth-app-root");
+    if (root) {
+        const sessionId = root.dataset.sessionId;
+        const app = createApp(BoothGallery, { sessionId });
+        app.mount(root);
+    }
+</script>
