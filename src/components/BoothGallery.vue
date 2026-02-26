@@ -59,7 +59,7 @@
       <div class="rounded-2xl bg-white border border-surface-200/60 p-5 shadow-sm">
         <p class="text-xs text-brand-500 font-semibold uppercase tracking-wider mb-3">Your Memories Softfiles</p>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-brand-600/30">
+          <div class="w-12 h-12 rounded-full bg-linear-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-brand-600/30">
             {{ sessionData.branch?.charAt(0)?.toUpperCase() || 'B' }}
           </div>
           <div class="flex-1 min-w-0">
@@ -151,7 +151,7 @@
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <!-- Expand icon on hover -->
             <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div class="w-8 h-8 rounded-lg bg-white/70 backdrop-blur-sm flex items-center justify-center shadow-sm">
@@ -322,7 +322,7 @@
 
     <!-- Footer -->
     <footer class="max-w-3xl mx-auto px-4 mt-8 text-center">
-      <div class="h-px bg-gradient-to-r from-transparent via-surface-200 to-transparent mb-6"></div>
+      <div class="h-px bg-linear-to-r from-transparent via-surface-200 to-transparent mb-6"></div>
       <p class="text-xs text-surface-700/40">2025 © Powered by <span class="text-brand-500 font-medium">Wallking Labs</span></p>
     </footer>
 
@@ -331,7 +331,7 @@
       <Transition name="lightbox">
         <div
           v-if="isViewerOpen"
-          class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-lg flex items-center justify-center"
+          class="fixed inset-0 z-100 bg-black/90 backdrop-blur-lg flex items-center justify-center"
           @click.self="closeViewer"
         >
           <!-- Close button -->

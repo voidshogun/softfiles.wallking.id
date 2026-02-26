@@ -56,7 +56,7 @@
       <div class="rounded-2xl bg-white border border-surface-200/60 p-5 shadow-sm">
         <p class="text-xs text-brand-500 font-semibold uppercase tracking-wider mb-3">Your Moments Softfiles</p>
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-brand-600/30">
+          <div class="w-12 h-12 rounded-full bg-linear-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-brand-600/30">
             {{ session.name?.charAt(0)?.toUpperCase() || '?' }}
           </div>
           <div class="flex-1 min-w-0">
@@ -118,14 +118,14 @@
           class="group relative rounded-2xl overflow-hidden bg-white border border-surface-200/60 hover:border-brand-300 transition-all duration-300 shadow-sm hover:shadow-md"
         >
           <!-- Thumbnail -->
-          <div class="relative aspect-[4/3] overflow-hidden cursor-pointer" @click="openLightbox(index)">
+          <div class="relative aspect-4/3 overflow-hidden cursor-pointer" @click="openLightbox(index)">
             <img
               :src="photo.thumbnailUrl"
               :alt="'Photo ' + (index + 1)"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <!-- Expand icon on hover -->
             <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div class="w-8 h-8 rounded-lg bg-white/70 backdrop-blur-sm flex items-center justify-center shadow-sm">
