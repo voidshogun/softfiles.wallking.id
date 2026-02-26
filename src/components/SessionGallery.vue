@@ -158,7 +158,7 @@
       <Transition name="lightbox">
         <div
           v-if="lightboxOpen"
-          class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-lg flex items-center justify-center"
+          class="fixed inset-0 z-100 bg-black/90 backdrop-blur-lg flex items-center justify-center"
           @click.self="closeLightbox"
         >
           <!-- Close button -->
@@ -219,7 +219,7 @@
 
     <!-- Footer -->
     <footer class="max-w-3xl mx-auto px-4 mt-12 pb-8 text-center">
-      <div class="h-px bg-gradient-to-r from-transparent via-surface-200 to-transparent mb-6"></div>
+      <div class="h-px bg-linear-to-r from-transparent via-surface-200 to-transparent mb-6"></div>
       <p class="text-xs text-surface-700/40">2023-2026 © Powered by <span class="text-brand-500 font-medium">Wallking Labs</span></p>
     </footer>
   </div>
