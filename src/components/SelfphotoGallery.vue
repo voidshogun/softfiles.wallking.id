@@ -6,7 +6,7 @@
         <div class="absolute inset-0 rounded-full border-2 border-brand-200"></div>
         <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-brand-500 animate-spin"></div>
       </div>
-      <p class="text-surface-700/60 text-sm tracking-wide uppercase">Memuat Softfiles Kamu…</p>
+      <p class="text-surface-700/60 text-sm tracking-wide uppercase">Memuat Foto Kamu…</p>
     </div>
   </div>
 
@@ -18,19 +18,19 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
         </svg>
       </div>
-      <h2 class="text-xl font-semibold text-surface-900 mb-2">Sesi tidak ditemukan</h2>
-      <p class="text-surface-700/60 text-sm">{{ error }}</p>
+      <h2 class="text-xl font-semibold text-surface-900 mb-2">Koleksi tidak ditemukan</h2>
+      <p class="text-surface-700/60 text-sm mb-4">{{ error }}</p>
+      <a href="/" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium inline-block">Kembali</a>
     </div>
   </div>
 
   <!-- Main Content -->
-  <div v-else-if="session" class="min-h-screen pb-12">
+  <div v-else-if="collection" class="min-h-screen pb-12">
     <!-- Header -->
     <header class="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-surface-200/60 shadow-sm">
       <div class="max-w-3xl mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <!-- Brand logo -->
             <img
               src="https://s3.nevaobjects.id/wallking-website/uploads/wlkg-dark.svg"
               alt="Wallking"
@@ -39,68 +39,44 @@
           </div>
           <!-- Share button -->
           <button
-            @click="shareSession"
+            @click="shareCollection"
             class="group flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-all duration-300 shadow-md shadow-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30"
           >
-            <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg v-if="copied" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            <svg v-else class="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
             </svg>
-            <span class="hidden sm:inline">Share</span>
+            <span class="hidden sm:inline">{{ copied ? 'Copied!' : 'Share' }}</span>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Session Info -->
+    <!-- Collection Info -->
     <div class="max-w-3xl mx-auto px-4 mt-6">
       <div class="rounded-2xl bg-white border border-surface-200/60 p-5 shadow-sm">
-        <p class="text-xs text-brand-500 font-semibold uppercase tracking-wider mb-3">Your Moments Softfiles</p>
+        <p class="text-xs text-brand-500 font-semibold uppercase tracking-wider mb-3">Selfphoto Softfiles</p>
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-full bg-linear-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-brand-600/30">
-            {{ session.name?.charAt(0)?.toUpperCase() || '?' }}
+            {{ collection.name?.charAt(0)?.toUpperCase() || '?' }}
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-xs text-surface-700/50">Terimakasih,</p>
-            <h2 class="text-xl font-bold text-surface-900 truncate">{{ session.name }}</h2>
+            <h2 class="text-xl font-bold text-surface-900 truncate">{{ displayName }}</h2>
             <div class="flex items-center gap-3 mt-0.5">
-              <span class="text-xs text-surface-700/50">{{ formatDate(session.createdAt) }}</span>
+              <span class="text-xs text-surface-700/50">{{ formatDate(collection.photos[0]?.uploaded_at) }}</span>
               <span class="text-xs text-surface-700/30">•</span>
-              <span class="text-xs text-brand-600 font-medium">{{ session.photoCount }} foto</span>
+              <span class="text-xs text-brand-600 font-medium">{{ collection.photos.length }} foto</span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Video Player (first video only) -->
-    <section v-if="session.videos && session.videos.length > 0" class="max-w-3xl mx-auto px-4 mt-6">
-      <div class="rounded-2xl overflow-hidden bg-white border border-surface-200/60 shadow-sm">
-        <div class="relative aspect-3/4 bg-surface-100">
-          <video
-            :src="session.videos[0].url"
-            class="w-full h-full object-cover"
-            controls
-            playsinline
-            preload="metadata"
-          ></video>
-        </div>
-        <div class="flex items-center justify-between px-4 py-3">
-          <p class="text-sm text-surface-700">Your Moment Video</p>
-          <a
-            :href="getDownloadLink(session.videos[0].filename, 'video')"
-            class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-600 text-xs font-medium transition-all duration-200 hover:scale-105 border border-brand-200/50"
-          >
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-            </svg>
-            Download
-          </a>
-        </div>
-      </div>
-    </section>
-
     <!-- Photos Section -->
-    <section v-if="session.photos && session.photos.length > 0" class="max-w-3xl mx-auto px-4 mt-8">
+    <section v-if="collection.photos && collection.photos.length > 0" class="max-w-3xl mx-auto px-4 mt-8">
       <div class="flex items-center gap-2 mb-4">
         <svg class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
@@ -109,18 +85,18 @@
           <h3 class="text-base font-semibold text-surface-900 leading-tight">Foto</h3>
           <p class="text-xs text-surface-700/50 mt-0.5">Tap foto untuk memperbesar</p>
         </div>
-        <span class="ml-auto text-xs text-surface-700/40">{{ session.photos.length }} file{{ session.photos.length > 1 ? 's' : '' }}</span>
+        <span class="ml-auto text-xs text-surface-700/40">{{ collection.photos.length }} file{{ collection.photos.length > 1 ? 's' : '' }}</span>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div
-          v-for="(photo, index) in session.photos"
-          :key="'photo-' + index"
+          v-for="(photo, index) in collection.photos"
+          :key="photo.id"
           class="group relative rounded-2xl overflow-hidden bg-white border border-surface-200/60 hover:border-brand-300 transition-all duration-300 shadow-sm hover:shadow-md"
         >
           <!-- Thumbnail -->
-          <div class="relative aspect-3/4 overflow-hidden cursor-pointer" @click="openLightbox(index)">
+          <div class="relative overflow-hidden cursor-pointer" @click="openLightbox(index)">
             <img
-              :src="photo.thumbnailUrl"
+              :src="getThumbnailUrl(photo)"
               :alt="'Photo ' + (index + 1)"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
@@ -139,7 +115,8 @@
           <div class="flex items-center justify-between px-3 py-2.5">
             <p class="text-xs text-surface-700/50 truncate mr-2">{{ formatFileSize(photo.size) }}</p>
             <a
-              :href="getDownloadLink(photo.filename, 'photo')"
+              :href="getDownloadUrl(photo)"
+              :download="photo.original_name"
               class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-600 text-[11px] font-medium transition-all duration-200 hover:scale-105 border border-brand-200/50"
               @click.stop
             >
@@ -152,6 +129,14 @@
         </div>
       </div>
     </section>
+
+    <ExpiryNotice />
+
+    <!-- Footer -->
+    <footer class="max-w-3xl mx-auto px-4 mt-8 pb-8 text-center">
+      <div class="h-px bg-linear-to-r from-transparent via-surface-200 to-transparent mb-6"></div>
+      <p class="text-xs text-surface-700/40">2023-2026 © Powered by <span class="text-brand-500 font-medium">Wallking Labs</span></p>
+    </footer>
 
     <!-- Lightbox -->
     <Teleport to="body">
@@ -171,94 +156,90 @@
             </svg>
           </button>
 
+          <!-- Top center counter -->
+          <div class="absolute top-6 left-1/2 -translate-x-1/2 z-10">
+            <span class="text-white/80 font-medium text-sm drop-shadow-md">
+              {{ lightboxIndex + 1 }} / {{ collection.photos.length }}
+            </span>
+          </div>
+
           <!-- Navigation -->
           <button
-            v-if="lightboxIndex > 0"
-            @click="lightboxIndex--"
-            class="absolute left-3 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            @click="prevPhoto"
+            class="absolute left-3 md:left-6 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors hover:scale-105"
           >
-            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
             </svg>
           </button>
           <button
-            v-if="session.photos && lightboxIndex < session.photos.length - 1"
-            @click="lightboxIndex++"
-            class="absolute right-3 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            @click="nextPhoto"
+            class="absolute right-3 md:right-6 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors hover:scale-105"
           >
-            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
             </svg>
           </button>
 
           <!-- Image -->
           <img
-            v-if="session.photos && session.photos[lightboxIndex]"
-            :src="session.photos[lightboxIndex].url"
+            v-if="collection.photos[lightboxIndex]"
+            :key="lightboxIndex"
+            :src="getFullUrl(collection.photos[lightboxIndex])"
             :alt="'Photo ' + (lightboxIndex + 1)"
-            class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
+            class="max-h-[85vh] max-w-[90vw] object-contain rounded-lg shadow-2xl transition-all duration-300"
           />
 
-          <!-- Bottom bar -->
-          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
-            <span class="text-sm text-white/50">{{ lightboxIndex + 1 }} / {{ session.photos?.length }}</span>
+          <!-- Bottom Action -->
+          <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex justify-center w-full px-4">
             <a
-              v-if="session.photos && session.photos[lightboxIndex]"
-              :href="getDownloadLink(session.photos[lightboxIndex].filename, 'photo')"
-              class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-medium transition-colors"
+              v-if="collection.photos[lightboxIndex]"
+              :href="getDownloadUrl(collection.photos[lightboxIndex])"
+              :download="collection.photos[lightboxIndex]?.original_name"
+              class="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-surface-900 text-sm font-bold shadow-lg transition-transform hover:scale-105"
             >
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
               </svg>
-              Download
+              Download Photo
             </a>
           </div>
         </div>
       </Transition>
     </Teleport>
-
-    <ExpiryNotice />
-
-    <!-- Footer -->
-    <footer class="max-w-3xl mx-auto px-4 mt-8 pb-8 text-center">
-      <div class="h-px bg-linear-to-r from-transparent via-surface-200 to-transparent mb-6"></div>
-      <p class="text-xs text-surface-700/40">2023-2026 © Powered by <span class="text-brand-500 font-medium">Wallking Labs</span></p>
-    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import ExpiryNotice from './ExpiryNotice.vue';
 
-const API_BASE = 'https://subway-v2.wallking.id';
+const API_BASE = 'https://selfphoto-v2.wallking.id';
 
-interface MediaItem {
+interface Photo {
+  id: number;
+  collection_id: number;
   filename: string;
-  url: string;
-  thumbnailUrl?: string;
+  original_name: string;
+  path: string;
+  thumbnail_path: string;
+  mimetype: string;
   size: number;
-  customerName: string;
+  uploaded_at: string;
 }
 
-interface SessionData {
-  sessionId: string;
+interface CollectionData {
+  id: number;
   name: string;
-  createdAt: string;
-  photoCount: number;
-  videoCount: number;
-  totalSize: string;
-  totalSizeBytes: number;
-  archiveLink: string;
-  photos: MediaItem[];
-  videos: MediaItem[];
+  social_media_permission: string | null;
+  photos: Photo[];
 }
 
 const props = defineProps<{
-  sessionId: string;
+  name: string;
 }>();
 
-const session = ref<SessionData | null>(null);
+const collection = ref<CollectionData | null>(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 
@@ -266,11 +247,31 @@ const error = ref<string | null>(null);
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
 
-const getDownloadLink = (filename: string, type: string): string => {
-  return `${API_BASE}/download-${type}/${filename}`;
+// Derive a readable display name from the collection name (strip the hash suffix)
+const displayName = computed(() => {
+  if (!collection.value?.name) return '';
+  // The name format is like "NONA-495b", we display the part before the dash
+  const parts = collection.value.name.split('-');
+  if (parts.length > 1) {
+    return parts.slice(0, -1).join('-');
+  }
+  return collection.value.name;
+});
+
+const getThumbnailUrl = (photo: Photo): string => {
+  return `${API_BASE}${photo.thumbnail_path}`;
+};
+
+const getFullUrl = (photo: Photo): string => {
+  return `${API_BASE}${photo.path}`;
+};
+
+const getDownloadUrl = (photo: Photo): string => {
+  return `${API_BASE}/collections/${encodeURIComponent(props.name)}/photos/${encodeURIComponent(photo.filename)}/download`;
 };
 
 const formatDate = (dateStr: string): string => {
+  if (!dateStr) return '';
   const d = new Date(dateStr);
   return d.toLocaleDateString('id-ID', {
     weekday: 'long',
@@ -300,10 +301,30 @@ const closeLightbox = () => {
   document.body.style.overflow = '';
 };
 
-const shareSession = async () => {
+const nextPhoto = () => {
+  if (!collection.value?.photos.length) return;
+  if (lightboxIndex.value < collection.value.photos.length - 1) {
+    lightboxIndex.value++;
+  } else {
+    lightboxIndex.value = 0;
+  }
+};
+
+const prevPhoto = () => {
+  if (!collection.value?.photos.length) return;
+  if (lightboxIndex.value > 0) {
+    lightboxIndex.value--;
+  } else {
+    lightboxIndex.value = collection.value.photos.length - 1;
+  }
+};
+
+// Share Logic
+const copied = ref(false);
+const shareCollection = async () => {
   const shareData = {
-    title: `${session.value?.name} — Wallking`,
-    text: `Check out ${session.value?.name}'s softfiles from Wallking Studio!`,
+    title: `${displayName.value} — Wallking Selfphoto`,
+    text: `Lihat foto-foto ${displayName.value} di Wallking Selfphoto Studio!`,
     url: window.location.href,
   };
 
@@ -311,22 +332,22 @@ const shareSession = async () => {
     try {
       await navigator.share(shareData);
     } catch {
-      // User cancelled sharing, do nothing
+      // Ignored
     }
   } else {
-    // Fallback: copy link to clipboard
     try {
       await navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+      copied.value = true;
+      setTimeout(() => { copied.value = false; }, 2000);
     } catch {
-      // Final fallback
       const textArea = document.createElement('textarea');
       textArea.value = window.location.href;
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
-      alert('Link copied to clipboard!');
+      copied.value = true;
+      setTimeout(() => { copied.value = false; }, 2000);
     }
   }
 };
@@ -334,19 +355,19 @@ const shareSession = async () => {
 const handleKeydown = (e: KeyboardEvent) => {
   if (!lightboxOpen.value) return;
   if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowLeft' && lightboxIndex.value > 0) lightboxIndex.value--;
-  if (e.key === 'ArrowRight' && session.value?.photos && lightboxIndex.value < session.value.photos.length - 1) lightboxIndex.value++;
+  if (e.key === 'ArrowLeft') prevPhoto();
+  if (e.key === 'ArrowRight') nextPhoto();
 };
 
 onMounted(async () => {
   document.addEventListener('keydown', handleKeydown);
 
   try {
-    const res = await fetch(`${API_BASE}/sessions/${props.sessionId}`);
-    if (!res.ok) throw new Error('Sesi tidak ditemukan atau sudah kadaluarsa.');
-    session.value = await res.json();
+    const res = await fetch(`${API_BASE}/collections/${props.name}`);
+    if (!res.ok) throw new Error('Koleksi tidak ditemukan atau sudah kadaluarsa.');
+    collection.value = await res.json();
   } catch (e: any) {
-    error.value = e.message || 'Failed to load session.';
+    error.value = e.message || 'Failed to load collection.';
   } finally {
     loading.value = false;
   }

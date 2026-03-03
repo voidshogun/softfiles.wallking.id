@@ -217,8 +217,10 @@
       </Transition>
     </Teleport>
 
+    <ExpiryNotice />
+
     <!-- Footer -->
-    <footer class="max-w-3xl mx-auto px-4 mt-12 pb-8 text-center">
+    <footer class="max-w-3xl mx-auto px-4 mt-8 pb-8 text-center">
       <div class="h-px bg-linear-to-r from-transparent via-surface-200 to-transparent mb-6"></div>
       <p class="text-xs text-surface-700/40">2023-2026 © Powered by <span class="text-brand-500 font-medium">Wallking Labs</span></p>
     </footer>
@@ -227,6 +229,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import ExpiryNotice from './ExpiryNotice.vue';
 
 const API_BASE = 'https://elevator-v2.wallking.id';
 

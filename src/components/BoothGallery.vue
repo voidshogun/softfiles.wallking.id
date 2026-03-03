@@ -320,6 +320,8 @@
       </div>
     </section>
 
+    <ExpiryNotice />
+
     <!-- Footer -->
     <footer class="max-w-3xl mx-auto px-4 mt-8 text-center">
       <div class="h-px bg-linear-to-r from-transparent via-surface-200 to-transparent mb-6"></div>
@@ -397,6 +399,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive } from 'vue';
+import ExpiryNotice from './ExpiryNotice.vue';
 
 const props = defineProps<{
   sessionId: string;

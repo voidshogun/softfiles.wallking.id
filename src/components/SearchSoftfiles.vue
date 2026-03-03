@@ -31,7 +31,7 @@
 
           <div>
             <label for="sessionId" class="block text-sm font-medium text-gray-700">
-              Session ID
+              {{ service === 'selfphoto' ? 'Nama Koleksi' : 'Session ID' }}
             </label>
             <div class="mt-2 relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -43,7 +43,7 @@
                 type="text"
                 required
                 class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black sm:text-sm transition-colors bg-gray-50 focus:bg-white"
-                placeholder="Cth: b8b285c5-9cce..."
+                :placeholder="service === 'selfphoto' ? 'Cth: NONA-495b' : 'Cth: b8b285c5-9cce...'"
               />
             </div>
           </div>

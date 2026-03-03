@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { name } = Astro.params;
+---
+
+<BaseLayout title="Selfphoto Softfiles | Wallking">
+    <div id="selfphoto-app-root" data-name={name}></div>
+</BaseLayout>
+
+<script>
+    import { createApp } from "vue";
+    import SelfphotoGallery from "../../components/SelfphotoGallery.vue";
+
+    const root = document.getElementById("selfphoto-app-root");
+    if (root) {
+        const name = root.dataset.name;
+        const app = createApp(SelfphotoGallery, { name });
+        app.mount(root);
+    }
+</script>
