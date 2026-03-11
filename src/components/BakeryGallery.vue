@@ -75,7 +75,7 @@
     <!-- Video Player (first video only) -->
     <section v-if="session.videos && session.videos.length > 0" class="max-w-3xl mx-auto px-4 mt-6">
       <div class="rounded-2xl overflow-hidden bg-white border border-surface-200/60 shadow-sm">
-        <div class="relative aspect-3/4 bg-surface-100">
+        <div class="relative bg-surface-100">
           <video
             :src="session.videos[0].url"
             class="w-full h-full object-cover"
@@ -118,7 +118,7 @@
           class="group relative rounded-2xl overflow-hidden bg-white border border-surface-200/60 hover:border-brand-300 transition-all duration-300 shadow-sm hover:shadow-md"
         >
           <!-- Thumbnail -->
-          <div class="relative aspect-3/4 overflow-hidden cursor-pointer" @click="openLightbox(index)">
+          <div class="relative overflow-hidden cursor-pointer" @click="openLightbox(index)">
             <img
               :src="photo.thumbnailUrl"
               :alt="'Photo ' + (index + 1)"
