@@ -87,9 +87,7 @@
         <div class="flex items-center justify-between px-4 py-3">
           <p class="text-sm text-surface-700">Your Moment Video</p>
           <a
-            :href="session.videos[0].url"
-            target="_blank"
-            :download="session.videos[0].filename.split('/').pop()"
+            :href="getDownloadLink(session.videos[0].filename, 'video')"
             class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-600 text-xs font-medium transition-all duration-200 hover:scale-105 border border-brand-200/50"
           >
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -141,9 +139,7 @@
           <div class="flex items-center justify-between px-3 py-2.5">
             <p class="text-xs text-surface-700/50 truncate mr-2">{{ formatFileSize(photo.size) }}</p>
             <a
-              :href="photo.url"
-              target="_blank"
-              :download="photo.filename.split('/').pop()"
+              :href="getDownloadLink(photo.filename, 'photo')"
               class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-600 text-[11px] font-medium transition-all duration-200 hover:scale-105 border border-brand-200/50"
               @click.stop
             >
@@ -208,9 +204,7 @@
             <span class="text-sm text-white/50">{{ lightboxIndex + 1 }} / {{ session.photos?.length }}</span>
             <a
               v-if="session.photos && session.photos[lightboxIndex]"
-              :href="session.photos[lightboxIndex].url"
-              target="_blank"
-              :download="session.photos[lightboxIndex].filename.split('/').pop()"
+              :href="getDownloadLink(session.photos[lightboxIndex].filename, 'photo')"
               class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-medium transition-colors"
             >
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -272,7 +266,9 @@ const error = ref<string | null>(null);
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
 
-// Direct download using S3 URLs
+const getDownloadLink = (filename: string, type: string): string => {
+  return `${API_BASE}/download-${type}/${filename}`;
+};
 
 const formatDate = (dateStr: string): string => {
   const d = new Date(dateStr);
