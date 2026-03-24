@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { sessionId } = Astro.params;
+---
+
+<BaseLayout title="Bakery Sessions | Wallking">
+    <div id="app-root-2" data-session-id={sessionId}></div>
+</BaseLayout>
+
+<script>
+    import { createApp } from "vue";
+    import Bakery2Gallery from "../../components/Bakery2Gallery.vue";
+
+    const root = document.getElementById("app-root-2");
+    if (root) {
+        const sessionId = root.dataset.sessionId;
+        const app = createApp(Bakery2Gallery, { sessionId });
+        app.mount(root);
+    }
+</script>
